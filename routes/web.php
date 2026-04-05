@@ -14,7 +14,7 @@ Route::get('/', function() {
 // List route
 Route::get('/tasks', function () { // to access variables outside the annonymouse func use($varaibel)
   return view('index', [
-    'tasks' => Task::latest()->get(),
+    'tasks' => Task::latest()->paginate(10),
   ]);
 })->name('tasks.index');
 
@@ -46,20 +46,25 @@ Route::post('/tasks', function(TaskRequest $request) {
 
 // Edit api
 Route::put('/tasks/{task}', function(Task $task, TaskRequest $request) {
-  // $data = $request->validated();
-
-  // $task->title = $data['title'];
-  // $task->description = $data['description'];
-  // $task->long_description = $data['long_description'];
-  // $task->save();
-
   $task->update($request->validated());
 
   return redirect()->route('tasks.show', ['task' => $task->id])
-        ->with('success', 'Task Updated successfully!');
+      ->with('success', 'Task Updated successfully!');
 })->name('tasks.update');
 
+// Delete Api
+Route::delete('/tasks/{task}', function(Task $task) {
+  $task->delete();
 
+  return redirect()->route('tasks.index')
+      ->with('success', 'Task Deleted Successfully!');
+})->name('tasks.destroy');
+
+Route::put('tasks/{task}/toggle-complete', function(Task $task) {
+  $task->toggleComplete();
+
+  return redirect()->back()->with('success', 'Task Updated Successfully!');
+})->name('tasks.toggle-complete');
 
 
 
