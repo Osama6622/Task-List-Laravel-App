@@ -14,7 +14,7 @@
 
 
 @section('content')
-    <form action="{{ route('tasks.update', ['id' => $task->id])}}" method="POST">
+    <form action="{{ route('tasks.update', ['task' => $task->id])}}" method="POST">
         @csrf
         {{-- method directive is used to change the HTTP method of the request --}}
         @method('PUT')
